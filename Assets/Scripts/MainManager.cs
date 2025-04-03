@@ -64,7 +64,10 @@ public class MainManager : MonoBehaviour
             {
                 if(GameManager.Instance.score < m_Points)
                 {
+                    GameManager.Instance.score = m_Points;
+                    GameManager.Instance.playerName = GameManager.Instance.currentPlayer;
                     GameManager.Instance.SavePlayer();
+                    Debug.Log("Player: " + GameManager.Instance.playerName + " has scored: " + GameManager.Instance.score);
                     DisplayHighScore();
                 }
             }

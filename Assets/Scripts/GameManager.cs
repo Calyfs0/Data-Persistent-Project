@@ -6,19 +6,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public string currentPlayer;
     public string playerName;
     public int score;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void OnBeforeSceneLoadRuntimeMethod()
-    {
-        if (Instance == null)
-        {
-            GameObject gameManager = new GameObject("GameManager");
-            Instance = gameManager.AddComponent<GameManager>();
-            DontDestroyOnLoad(gameManager);
-        }
-    }
+    string path;
 
     private void Awake()
     {
@@ -26,12 +17,14 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadPlayerInfo();
         }
         else
         {
             Destroy(gameObject);
         }
+
+        LoadPlayerInfo();
+        path = Application.persistentDataPath + "/savefile.json";
     }
 
     public void SavePlayer()
@@ -41,18 +34,22 @@ public class GameManager : MonoBehaviour
             playerName = playerName,
             score = score
         };
-
+        
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
         string json = JsonUtility.ToJson(player);
-        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+        File.WriteAllText(path, json);
         Debug.Log("Player Saved");
     }
 
     public void LoadPlayerInfo()
     {
-        string path = Application.persistentDataPath + "/savefile.json";
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
+            Debug.Log(json);
             Player player = JsonUtility.FromJson<Player>(json);
             playerName = player.playerName;
             score = player.score;
@@ -61,6 +58,7 @@ public class GameManager : MonoBehaviour
     [Serializable]
     class Player
     {
+        public string currentPlayer;
         public string playerName;
         public int score;
     }

@@ -8,11 +8,12 @@ public class StartMenu : MonoBehaviour
     public TMP_InputField nameInputField;
     public TextMeshProUGUI BestScoreAndNameText;
 
-    public void Awake()
+    void Start()
     {
-
+        
         if (GameManager.Instance != null)
         {
+            GameManager.Instance.LoadPlayerInfo();
             Debug.Log(GameManager.Instance.playerName);
             if (string.IsNullOrEmpty(GameManager.Instance.playerName))
             {
@@ -20,6 +21,7 @@ public class StartMenu : MonoBehaviour
             }
             else
             {
+               
                 SetBestScore();
             }
         }
@@ -31,7 +33,17 @@ public class StartMenu : MonoBehaviour
     public void StartGame()
     {
         if (nameInputField != null && !string.IsNullOrEmpty(nameInputField.text))
-        {
+        {   
+            //if (!GameManager.Instance.playerName.Equals(nameInputField.text))
+            //{
+            //    GameManager.Instance.playerName = nameInputField.text;
+            //    Debug.Log("Welcome: " + GameManager.Instance.playerName);
+            //    GameManager.Instance.SavePlayer();
+            //}
+
+            GameManager.Instance.currentPlayer = nameInputField.text;
+            Debug.Log("Welcome: " + GameManager.Instance.playerName);
+
             SceneManager.LoadScene(1);
         }
         else
